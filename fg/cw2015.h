@@ -47,11 +47,16 @@ function:cw2015 bat. information
 #define SIZE_BATINFO 64
 #define TRY_COUNT 20
 
-unsigned char cw_init(void);
-unsigned char read_cw2015(void);
-
+#ifdef __cplusplus
+extern "C" {
+#endif
+	extern unsigned char cw_init(void);
+	extern int  get_cw2015_vol(void);
+	extern uint8_t get_cw2015_soc(void);
+#ifdef __cplusplus
+}
 #endif
 
 
 
-
+#endif

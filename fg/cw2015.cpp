@@ -1,6 +1,6 @@
-#include "cw2015.h"
-
 typedef unsigned char uint8_t;
+
+#include "cw2015.h"
 
 unsigned char temp_data[SIZE_BATINFO] = {0};//read data
 
@@ -21,13 +21,18 @@ void delay_t(int n)
 	while(n--);
 }
 
+#include "stdint.h"
+extern int8_t write_bytes(uint8_t slave_address, uint8_t reg_address, const uint8_t *data, uint16_t num_to_write);
+extern int8_t read_bytes(uint8_t slave_address, uint8_t reg_address, uint8_t *data, uint16_t num_to_read);
 uint8_t write_data(uint8_t addr, const uint8_t *pdata, int length)
 {
+	write_bytes((WRITE_CW2015),addr, pdata, length);
 	return 0;
 }
 
 uint8_t read_data(uint8_t addr, uint8_t *pdata, int length)
 {
+	read_bytes((WRITE_CW2015), addr, pdata, length);
 	return 0;
 }
 
@@ -79,11 +84,14 @@ unsigned char check_bat_info(void)
 	return 0;
 }
 
-//cw2015 initialize							
+//cw2015 initialize		
+extern void init_i2c_gpio(void);
 unsigned char cw_init(void)
 {	
 	unsigned char ret;
 	unsigned char reg_val;
+	
+	init_i2c_gpio();
 					
 	//check sleep status
 	ret = read_cw(REG_MODE, &reg_val, 1);
@@ -222,4 +230,20 @@ unsigned char rx_buf_checksum(void)
 						bat_sum &= 0xff;
 				}
 		return (unsigned char)bat_sum;
+}
+
+uint8_t get_cw2015_soc(void)
+{
+		if(0 == read_cw2015()){
+				return rsoc;
+		}
+		return 0xFF;
+}
+
+int get_cw2015_vol(void)
+{
+		if(0 == read_cw2015()){
+				return vb;
+		}
+		return -1;
 }

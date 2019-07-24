@@ -33,7 +33,7 @@
 #include "oled.h"
 #include "bmp.h"
 
-__weak uint8_t get_cw2015_vol(void)
+__weak int get_cw2015_vol(void)
 {
 		return 101;
 }
@@ -42,6 +42,8 @@ __weak uint8_t get_cw2015_soc(void)
 {
 			return 102;
 }
+
+#include "cw2015.h"
 
  int main(void)
  {	
@@ -66,6 +68,7 @@ __weak uint8_t get_cw2015_soc(void)
 		OLED_ShowCHinese(90,0,5);//¿Æ
 		OLED_ShowCHinese(108,0,6);//¼¼
 		*/	
+	cw_init();
 	while(1) 
 	{		
 		OLED_Clear();
