@@ -161,3 +161,65 @@ unsigned char cw_init(void)
 	return 0;
 					
 }
+
+unsigned int intCount = 0;
+
+unsigned char rsoc = 0;
+unsigned char vb_read[2] = {0};
+unsigned int vb = 0;
+
+unsigned char tx_data[32] = {0};
+unsigned char rx_buf[32] = {0};
+
+unsigned char rcf_count =0;//cap. read fail count
+unsigned char ird_count = 0;//initial read data count
+unsigned int t_cr = 0;//cw2015 read time
+unsigned char t_sd = 0;//sleep delay time
+
+unsigned char read_cw2015(void)
+{
+		unsigned char ret = 0;										
+		ret = read_data(RSOC, &rsoc, 1);
+		if(ret)
+				return 1;			
+		ret = read_data(BV_H, vb_read, 2);
+		if(ret)
+				return 1;	
+		vb = (((unsigned int)vb_read[0] <<8) | vb_read[1]);		
+		return 0;
+}
+//checksum calculate
+//checksum of tx_data
+unsigned char tx_checksum(void)
+{
+		unsigned char i;
+		unsigned int bat_sum = 0;
+		for(i = 1; i < (tx_data[1] + 2); i++)
+				{
+						bat_sum += tx_data[i];
+						if(bat_sum > 0xff)
+								{
+										bat_sum = ~bat_sum;
+										bat_sum += 1;
+								}
+						bat_sum &= 0xff;
+				}
+		return (unsigned char)bat_sum;
+}
+//checksum of rx_data
+unsigned char rx_buf_checksum(void)
+{
+		unsigned char i;
+		unsigned int bat_sum = 0;
+		for(i = 1; i < (rx_buf[1] + 2); i++)
+				{
+						bat_sum += rx_buf[i];
+						if(bat_sum > 0xff)
+								{
+										bat_sum = ~bat_sum;
+										bat_sum += 1;
+								}
+						bat_sum &= 0xff;
+				}
+		return (unsigned char)bat_sum;
+}
