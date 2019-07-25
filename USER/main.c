@@ -47,8 +47,8 @@ __weak uint8_t get_cw2015_soc(void)
 
  int main(void)
  {	
-		uint8_t vol = 0;
-		uint8_t soc = 0;
+		int vol = 0;
+		int soc = 0;
 		delay_init();	    	 //延时函数初始化	  
 		NVIC_Configuration(); 	 //设置NVIC中断分组2:2位抢占优先级，2位响应优先级 	LED_Init();			     //LED端口初始化
 		OLED_Init();			//初始化OLED  
@@ -68,17 +68,19 @@ __weak uint8_t get_cw2015_soc(void)
 		OLED_ShowCHinese(90,0,5);//科
 		OLED_ShowCHinese(108,0,6);//技
 		*/	
-	cw_init();
 	while(1) 
 	{		
 		OLED_Clear();
-		OLED_ShowString(0,6,"Vol=");  
-		OLED_ShowString(63,6,"Soc=");  
-		vol = get_cw2015_vol();
-		soc = get_cw2015_soc();
-		OLED_ShowNum(32, 6,vol,3,16);//显示ASCII字符的码值 
-		OLED_ShowNum(103,6,soc,3,16);//显示ASCII字符的码值 	
-		delay_ms(8000);
+		OLED_ShowString(0,6,"Vb=");  
+		OLED_ShowString(63,6,"Soc=  %");  
+		if(get_cw2015_soc_vol(&soc, &vol)){
+				/* read error in this case */
+				soc = 255;
+				vol = 255;
+		}
+		OLED_ShowNum(32-8, 6,vol,4,16);//显示ASCII字符的码值 
+		OLED_ShowNum(103-8,6,soc,2,16);//显示ASCII字符的码值 	
+		delay_ms(1000);
 	}	  
 	
 }

@@ -4,7 +4,7 @@ perfect date£º2018.1.8
 mcu:bs86d20a-3
 
 function:cw2015 bat. information
--------------------------------*/ 
+-------------------------------*/
 
 
 #ifndef _CW_BAT_INFO_H_
@@ -50,9 +50,7 @@ function:cw2015 bat. information
 #ifdef __cplusplus
 extern "C" {
 #endif
-	extern unsigned char cw_init(void);
-	extern int  get_cw2015_vol(void);
-	extern uint8_t get_cw2015_soc(void);
+extern uint8_t get_cw2015_soc_vol(int *soc, int *vol);
 #ifdef __cplusplus
 }
 #endif
